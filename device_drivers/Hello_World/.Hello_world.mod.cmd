@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Hello_World/Hello_world.mod := { echo  /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.o;  echo; } > /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.mod

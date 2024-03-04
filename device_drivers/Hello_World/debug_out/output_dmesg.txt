@@ -1,0 +1,10 @@
+[203862.324218] Hello, world
+[203873.599991] Goodbye, cruel world
+[203897.831133] Hello, world
+[203897.846589] Goodbye, cruel world
+[203940.786125] Hello, world
+[203940.803660] Goodbye, cruel world
+[203981.286800] Hello, world
+[203981.302804] Goodbye, cruel world
+[204007.176814] Hello, world
+[204007.192734] Goodbye, cruel world

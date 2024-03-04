@@ -1,0 +1,4 @@
+rmmod: ERROR: ../libkmod/libkmod-module.c:1941 kmod_module_get_holders() could not open '/sys/module//holders': No such file or directory
+rmmod: ERROR: Module unloading is not supported
+rmmod: ERROR: ../libkmod/libkmod-module.c:1941 kmod_module_get_holders() could not open '/sys/module//holders': No such file or directory
+rmmod: ERROR: Module unloading is not supported
