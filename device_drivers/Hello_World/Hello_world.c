@@ -3,6 +3,7 @@
 static int hello_init(void)   //__init can be added before hello_init to make sure that this is called at initialization only
 {
 	printk(KERN_ALERT "Hello, world\n");
+	//printk(KERN_ALERT "%d\n",a);
 	return 0;
 }
 

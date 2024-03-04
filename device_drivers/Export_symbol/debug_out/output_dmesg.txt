@@ -1,0 +1,10 @@
+[210922.762130] Kernel Module Removed Successfully...
+[211060.588492] ValueETX = 14  
+[211060.588498] cb_valueETX = 0  
+[211060.588499] NameETX = EmbeTronicX 
+[211060.588500] Arr_value[0] = 100
+[211060.588501] Arr_value[1] = 102
+[211060.588501] Arr_value[2] = 104
+[211060.588502] Arr_value[3] = 106
+[211060.588503] Kernel Module Inserted Successfully...
+[211060.605656] Kernel Module Removed Successfully...

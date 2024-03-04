@@ -2,7 +2,4 @@ make -C /lib/modules/5.15.0-67-generic/build M=/home/vlab/git_comp/device_driver
 make[1]: Entering directory '/usr/src/linux-headers-5.15.0-67-generic'
   CC [M]  /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.o
   MODPOST /home/vlab/git_comp/device_drivers/Hello_World/Module.symvers
-  CC [M]  /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.mod.o
-  LD [M]  /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.ko
-  BTF [M] /home/vlab/git_comp/device_drivers/Hello_World/Hello_world.ko
 make[1]: Leaving directory '/usr/src/linux-headers-5.15.0-67-generic'

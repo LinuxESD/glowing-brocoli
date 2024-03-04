@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Export_symbol/Module.symvers := sed 's/\.ko$$/\.o/' /home/vlab/git_comp/device_drivers/Export_symbol/modules.order | scripts/mod/modpost -m -a  -o /home/vlab/git_comp/device_drivers/Export_symbol/Module.symvers -e -i Module.symvers   -T -

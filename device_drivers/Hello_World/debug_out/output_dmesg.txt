@@ -1,10 +1,10 @@
-[203862.324218] Hello, world
-[203873.599991] Goodbye, cruel world
-[203897.831133] Hello, world
-[203897.846589] Goodbye, cruel world
-[203940.786125] Hello, world
-[203940.803660] Goodbye, cruel world
-[203981.286800] Hello, world
-[203981.302804] Goodbye, cruel world
-[204007.176814] Hello, world
-[204007.192734] Goodbye, cruel world
+[207877.651835] Goodbye, cruel world
+[207926.415103] Hello, world
+[207926.415111] 0
+[207926.436637] Goodbye, cruel world
+[208048.632183] Hello, world
+[208048.632190] 0
+[208048.651167] Goodbye, cruel world
+[208093.991980] Hello, world
+[208093.991987] 0
+[208094.007848] Goodbye, cruel world
