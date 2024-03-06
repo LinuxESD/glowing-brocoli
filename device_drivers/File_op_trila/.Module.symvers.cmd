@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/File_op_trila/Module.symvers := sed 's/\.ko$$/\.o/' /home/vlab/git_comp/device_drivers/File_op_trila/modules.order | scripts/mod/modpost -m -a  -o /home/vlab/git_comp/device_drivers/File_op_trila/Module.symvers -e -i Module.symvers   -T -

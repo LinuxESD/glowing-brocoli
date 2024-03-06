@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Real_driver/modules.order := {   echo /home/vlab/git_comp/device_drivers/Real_driver/driver.ko; :; } | awk '!x[$$0]++' - > /home/vlab/git_comp/device_drivers/Real_driver/modules.order

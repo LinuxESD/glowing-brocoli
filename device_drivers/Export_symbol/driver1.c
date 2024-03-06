@@ -23,10 +23,10 @@ int notify_param(const char *val, const struct kernel_param *kp)
         return -1;
 }
  
-const struct kernel_param_ops my_param_ops = 
+const struct kernel_param_ops my_param_ops =
 {
-        .set = &notify_param, // Use our setter ...
-        .get = &param_get_int, // .. and standard getter
+      .set = &notify_param, // Use our setter ...
+      .get = &param_get_int, // .. and standard getter
 };
  
 module_param_cb(cb_valueETX, &my_param_ops, &cb_valueETX, S_IRUGO|S_IWUSR );
