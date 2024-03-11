@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/IOCTL_basics/driver_ioctl_basics.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/vlab/git_comp/device_drivers/IOCTL_basics/driver_ioctl_basics.ko /home/vlab/git_comp/device_drivers/IOCTL_basics/driver_ioctl_basics.o /home/vlab/git_comp/device_drivers/IOCTL_basics/driver_ioctl_basics.mod.o;  true

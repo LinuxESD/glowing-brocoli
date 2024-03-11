@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/IOCTL_basics/Module.symvers := sed 's/\.ko$$/\.o/' /home/vlab/git_comp/device_drivers/IOCTL_basics/modules.order | scripts/mod/modpost -m -a  -o /home/vlab/git_comp/device_drivers/IOCTL_basics/Module.symvers -e -i Module.symvers   -T -

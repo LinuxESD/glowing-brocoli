@@ -211,3 +211,4 @@ MODULE_LICENSE("GPL");
 MODULE_AUTHOR("EmbeTronicX <embetronicx@gmail.com>");
 MODULE_DESCRIPTION("Simple Linux device driver (Real Linux Device Driver)");
 MODULE_VERSION("1.4");
+

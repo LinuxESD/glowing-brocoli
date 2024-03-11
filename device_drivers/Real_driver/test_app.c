@@ -8,7 +8,9 @@
 
 int8_t write_buf[512];
 int8_t read_buf[512];
-
+int read_out;
+int write_out;
+int seek_out;
 int main()
 {
 	int fd;
@@ -39,17 +41,18 @@ int main()
 			scanf("\n%[^\n]s",write_buf);
 			printf("Data writing...\n");
 			//write(fd, write_buf, strlen(write_buf));
-			write(fd,write_buf,strlen(write_buf)+1);
+			printf("%ld is writeout\n",write(fd,write_buf,strlen(write_buf)));
                         printf("Done!\n");
 			break;
 		case '2':
 			printf("Data Reading ...");
 			lseek(fd,0,0);
-                        read(fd, read_buf,512);
+                        printf("%ld is readout\n",read(fd, read_buf,512));
                         printf("Done!\n\n");
                         printf("Data = %s\n\n", read_buf);
 			//changes in the code
 			printf("%ld\n",strlen(read_buf));
+			//int i;
 			printf("\n\nData2=%s\n",read_buf);
 			break;
 		case '3':
