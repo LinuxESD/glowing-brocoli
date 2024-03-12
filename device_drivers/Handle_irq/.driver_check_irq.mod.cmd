@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.mod := { echo  /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.o;  echo; } > /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.mod

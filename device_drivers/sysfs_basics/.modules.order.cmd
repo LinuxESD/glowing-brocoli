@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/sysfs_basics/modules.order := {   echo /home/vlab/git_comp/device_drivers/sysfs_basics/driver_checks.ko; :; } | awk '!x[$$0]++' - > /home/vlab/git_comp/device_drivers/sysfs_basics/modules.order

@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.ko /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.o /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.mod.o;  true

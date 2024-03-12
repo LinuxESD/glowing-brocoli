@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/sysfs_basics/driver.mod := { echo  /home/vlab/git_comp/device_drivers/sysfs_basics/driver.o;  echo; } > /home/vlab/git_comp/device_drivers/sysfs_basics/driver.mod

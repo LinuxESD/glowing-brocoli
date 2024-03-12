@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Handle_irq/modules.order := {   echo /home/vlab/git_comp/device_drivers/Handle_irq/driver_check_irq.ko; :; } | awk '!x[$$0]++' - > /home/vlab/git_comp/device_drivers/Handle_irq/modules.order
