@@ -1,0 +1,4 @@
+make -C /lib/modules/6.5.0-21-generic/build M=/home/tonystark/Desktop/DeviceDriver modules
+make[1]: Entering directory '/usr/src/linux-headers-6.5.0-21-generic'
+  CC [M]  /home/tonystark/Desktop/DeviceDriver/multidev_pcd.o
+make[1]: Leaving directory '/usr/src/linux-headers-6.5.0-21-generic'
