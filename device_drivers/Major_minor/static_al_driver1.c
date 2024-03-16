@@ -10,18 +10,20 @@
 #include<linux/init.h>
 #include<linux/module.h>
 #include <linux/fs.h>
-
+extern dev_t dev;
 //creating the dev with our custom major and minor number
-dev_t dev = MKDEV(235, 0);
-
+//dev_t dev = MKDEV(235, 0);
+//dev_t dev;
 /*
 ** Module Init function
 */
+int a;
 static int __init hello_world_init(void)
 {
-    register_chrdev_region(dev, 1, "Embetronicx_Deav");
+    a=alloc_chrdev_region(&dev, 1,1, "Embetronicx_Deav");
+    printk("%d",a);
     printk(KERN_INFO "Major = %d Minor = %d \n",MAJOR(dev), MINOR(dev));
-    printk(KERN_INFO "Kernel Module Inserted Successfully...\n");
+    printk(KERN_INFO "Kernel Module d1 Inserted Successfully...\n");
     return 0;
 }
 

@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Major_minor/static_al_driver.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000  --build-id  -T ./scripts/module-common.lds -o /home/vlab/git_comp/device_drivers/Major_minor/static_al_driver.ko /home/vlab/git_comp/device_drivers/Major_minor/static_al_driver.o /home/vlab/git_comp/device_drivers/Major_minor/static_al_driver.mod.o;  true

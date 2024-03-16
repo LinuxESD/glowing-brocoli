@@ -1,1 +1,0 @@
-cmd_/home/vlab/git_comp/device_drivers/Export_symbol/driver1.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/vlab/git_comp/device_drivers/Export_symbol/driver1.ko /home/vlab/git_comp/device_drivers/Export_symbol/driver1.o /home/vlab/git_comp/device_drivers/Export_symbol/driver1.mod.o;  true

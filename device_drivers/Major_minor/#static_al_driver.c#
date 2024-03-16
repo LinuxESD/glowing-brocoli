@@ -22,7 +22,7 @@ dev_t dev = MKDEV(235, 0);
 int b;
 static int __init hello_world_init(void)
 {
-   b= register_chrdev_region(dev, 1, "Embetronicx_Dev");
+   b= alloc_chrdev_region(dev, 1, "Embetronicx_Dev");
    printk("%d",b);
     printk(KERN_INFO "Major = %d Minor = %d \n",MAJOR(dev), MINOR(dev));
     printk(KERN_INFO "Kernel Module d0 Inserted Successfully...\n");

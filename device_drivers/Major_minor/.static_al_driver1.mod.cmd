@@ -1,0 +1,1 @@
+cmd_/home/vlab/git_comp/device_drivers/Major_minor/static_al_driver1.mod := { echo  /home/vlab/git_comp/device_drivers/Major_minor/static_al_driver1.o; echo; } > /home/vlab/git_comp/device_drivers/Major_minor/static_al_driver1.mod

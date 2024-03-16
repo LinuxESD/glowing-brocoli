@@ -1,5 +1,5 @@
-obj-m += static_al_driver1.o 
-obj-m += static_al_driver.o
+obj-m += driver_modi_kernel.o
+obj-m += driver1_modi_kernel.o
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
