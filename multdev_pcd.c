@@ -151,6 +151,7 @@ int __init pcd_driver_init(void)
 		}
 
 		pcdrv_data.device_pcd = device_create(pcdrv_data.class_pcd, NULL, pcdrv_data.device_number+i, NULL, "pcdev_%d",i+1);
+		//pcdrv_data.device_pcd = device_create(pcdrv_data.class_pcd, NULL, pcdrv_data.device_number+i, NULL, "pcdev");
 		if(IS_ERR(pcdrv_data.device_pcd))
 		{
 			pr_err("Device create failed!!\n");

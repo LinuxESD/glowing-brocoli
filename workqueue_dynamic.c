@@ -5,33 +5,53 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
-#include <linux/slab.h>                 //kmalloc()
-#include <linux/uaccess.h>              //copy_to/from_user()
-#include <linux/kthread.h>
-#include <linux/wait.h>                 // Required for the wait queues
+#include<linux/slab.h>                 //kmalloc()
+#include<linux/uaccess.h>              //copy_to/from_user()
+#include<linux/sysfs.h> 
+#include<linux/kobject.h> 
+#include <linux/interrupt.h>
+#include <asm/io.h>
+#include <asm/hw_irq.h>
+#include <linux/workqueue.h>            // Required for workqueues
 #include <linux/err.h>
+ 
+#define IRQ_NO 11
 
+/* Work structure */
+struct work_struct workqueue;
 
-uint32_t read_count = 0;
-static struct task_struct *wait_thread;
+void workqueue_fn(struct work_struct *work);
+
+/*Workqueue Function*/
+void workqueue_fn(struct work_struct *work)
+{
+	pr_info("Executing workqueue functoin");
+}
+ 
+//Interrupt handler for IRQ 11. 
+static irqreturn_t irq_handler(int irq, void *dev_id)
+{
+	pr_info("Shared IRQ: Interrupt Occurred");
+	schedule_work(&workqueue);
+
+	return IRQ_HANDLED;
+}
 
 dev_t dev = 0;
 static struct class *dev_class;
 static struct cdev etx_cdev;
-wait_queue_head_t wait_queue_etx;
-int wait_queue_flag = 0;
 
-/*
-** Function Prototypes
-*/
-static int      __init etx_driver_init(void);
-static void     __exit etx_driver_exit(void);
- 
+static int __init etx_driver_init(void);
+static void __exit etx_driver_exit(void);
+
 /*************** Driver functions **********************/
-static int      etx_open(struct inode *inode, struct file *file);
-static int      etx_release(struct inode *inode, struct file *file);
-static ssize_t  etx_read(struct file *filp, char __user *buf, size_t len,loff_t * off);
-static ssize_t  etx_write(struct file *filp, const char __user *buf, size_t len, loff_t * off);
+static int etx_open(struct inode *inode, struct file *file);
+static int etx_release(struct inode *inode, struct file *file);
+static ssize_t etx_read(struct file *filp, 
+                char __user *buf, size_t len,loff_t * off);
+static ssize_t etx_write(struct file *filp, 
+                const char *buf, size_t len, loff_t * off);
+
 /*
 ** File operation sturcture
 */
@@ -43,37 +63,11 @@ static struct file_operations fops =
         .open           = etx_open,
         .release        = etx_release,
 };
- 
-/*
-** Thread function
-*/
 
-
-static int wait_function(void *unused)
-{
-	while(1)
-	{
-		pr_info("Waiting for Event...\n");
-		wait_event_interruptible(wait_queue_etx, wait_queue_flag !=0);
-		//wait_event_interruptible_timeout(wait_queue_etx, wait_queue_flag !=0,10*HZ);
-		if(wait_queue_flag == 2)
-		{
-			pr_info("Event Came From Exit Function\n");
-                        return 0;
-		}
-		else if(wait_queue_flag == 1)
-			       pr_info("Event Came From Read Function - %d\n", ++read_count);
-		else
-			pr_info("No Event Came....\n");
-		
-                wait_queue_flag = 0;
-	}
-	return 0;
-}
 
 /*
 ** This function will be called when we open the Device file
-*/ 
+*/  
 static int etx_open(struct inode *inode, struct file *file)
 {
         pr_info("Device File Opened...!!!\n");
@@ -82,36 +76,46 @@ static int etx_open(struct inode *inode, struct file *file)
 
 /*
 ** This function will be called when we close the Device file
-*/
+*/  
 static int etx_release(struct inode *inode, struct file *file)
 {
         pr_info("Device File Closed...!!!\n");
         return 0;
 }
 
+
 /*
 ** This function will be called when we read the Device file
 */
-static ssize_t etx_read(struct file *filp, char __user *buf, size_t len, loff_t *off)
+static ssize_t etx_read(struct file *filp, 
+                char __user *buf, size_t len, loff_t *off)
 {
-	pr_info("Read function called...\n");
-	wait_queue_flag = 1;
-	wake_up_interruptible_sync(&wait_queue_etx); // observation: sync is behaving like normal
- 
-	pr_info("After wakeup\n");
-	return 0;
+	struct irq_desc *desc;
+	
+        pr_info("Read function\n");
+	desc = irq_to_desc(11);
+        if (!desc) 
+        {
+            return -EINVAL;
+        }
+        __this_cpu_write(vector_irq[59], desc);
+        asm("int $0x3B");  // Corresponding to irq 11
+        return 0;
 }
 
 /*
 ** This function will be called when we write the Device file
 */
-static ssize_t etx_write(struct file *filp, const char __user *buf, size_t len, loff_t *off)
+static ssize_t etx_write(struct file *filp, 
+                const char __user *buf, size_t len, loff_t *off)
 {
-        pr_info("Write function\n");
+        pr_info("Write Function\n");
         return len;
 }
-
-
+ 
+/*
+** Module Init function
+*/
 static int __init etx_driver_init(void)
 {
         /*Allocating Major number*/
@@ -141,36 +145,36 @@ static int __init etx_driver_init(void)
             pr_info("Cannot create the Device 1\n");
             goto r_device;
         }
+	
+	if (request_irq(IRQ_NO, irq_handler, IRQF_SHARED, "etx_device", (void *)(irq_handler))) {
+            pr_info("my_device: cannot register IRQ ");
+                    goto irq;
+        }
 
-	init_waitqueue_head(&wait_queue_etx);
-
-	wait_thread = kthread_create(wait_function, NULL, "WaitThread");
-	if(wait_thread)
-	{
-		pr_info("Thread Created successfully\n");
-		wake_up_process(wait_thread);
-	}
-	else
-		pr_info("Thread creation failed\n");
-
-	pr_info("Device Driver Insert...Done!!!\n");
+	/*Creating work by Dynamic Method */
+	INIT_WORK(&workqueue, workqueue_fn);
+	
+        pr_info("Device Driver Insert...Done!!!\n");
         return 0;
  
+irq:
+        free_irq(IRQ_NO,(void *)(irq_handler));
+
 r_device:
         class_destroy(dev_class);
 r_class:
         unregister_chrdev_region(dev,1);
+        cdev_del(&etx_cdev);
         return -1;
 }
 
 /*
 ** Module exit function
-*/
+*/ 
 static void __exit etx_driver_exit(void)
 {
-	wait_queue_flag = 2;
-	wake_up_interruptible(&wait_queue_etx);
-	device_destroy(dev_class,dev);
+        free_irq(IRQ_NO,(void *)(irq_handler));
+        device_destroy(dev_class,dev);
         class_destroy(dev_class);
         cdev_del(&etx_cdev);
         unregister_chrdev_region(dev, 1);
@@ -181,4 +185,3 @@ module_init(etx_driver_init);
 module_exit(etx_driver_exit);
  
 MODULE_LICENSE("GPL");
-
