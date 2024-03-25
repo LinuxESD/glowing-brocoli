@@ -7,54 +7,30 @@
 #include <linux/device.h>
 #include<linux/slab.h>                 //kmalloc()
 #include<linux/uaccess.h>              //copy_to/from_user()
+#include <linux/kthread.h>             //kernel threads
+#include <linux/sched.h>               //task_struct 
+#include <linux/delay.h>
+#include <linux/err.h>
 #include <linux/interrupt.h>
 #include <asm/io.h>
 #include <asm/hw_irq.h>
-#include <linux/err.h>
+
+//DEFINE_SPINLOCK(my_spinlock);
 
 #define IRQ_NO 11
 
-void tasklet1_fn(unsigned long);
-void tasklet2_fn(unsigned long);
+spinlock_t my_spinlock;
 
-/* Init the Tasklet by dynamic Method */
-struct tasklet_struct *tasklet1 = NULL;
-struct tasklet_struct *tasklet2 = NULL;
-
-/*Tasklet Function*/
-void tasklet1_fn(unsigned long arg)
-{
-	int i;
-	for(i=0; i<10; i++)
-		pr_info("Executing Tasklet 1 Function : arg = %ld\n", arg);
-}
-
-void tasklet2_fn(unsigned long arg)
-{
-	int i;
-	for(i=0; i<10; i++)
-		    pr_info("Executing Tasklet 2 Function : arg = %ld\n", arg);
-}
-
-
-//Interrupt handler for IRQ 11.
-irqreturn_t irq_handler(int irq, void *dev_id)
-{
-	pr_info("Shared IRQ: Interrupt Occurred");
-        /*Scheduling Task to Tasklet*/
-	tasklet_schedule(tasklet1);
-	tasklet_hi_schedule(tasklet2);
-
-	return IRQ_HANDLED;
-}
+unsigned long etx_global_variable = 0;
 
 dev_t dev = 0;
 static struct class *dev_class;
 static struct cdev etx_cdev;
-
+ 
 static int __init etx_driver_init(void);
 static void __exit etx_driver_exit(void);
- 
+
+
 /*************** Driver functions **********************/
 static int etx_open(struct inode *inode, struct file *file);
 static int etx_release(struct inode *inode, struct file *file);
@@ -62,9 +38,41 @@ static ssize_t etx_read(struct file *filp,
                 char __user *buf, size_t len,loff_t * off);
 static ssize_t etx_write(struct file *filp, 
                 const char *buf, size_t len, loff_t * off);
-/*
-** File operation sturcture
-*/
+ /******************************************************/
+
+
+void tasklet_fn(unsigned long arg);
+
+DECLARE_TASKLET(tasklet, tasklet_fn, 1);
+
+//Interrupt handler for IRQ 11. 
+static irqreturn_t irq_handler(int irq,void *dev_id)
+{
+        printk(KERN_INFO "Shared IRQ: Interrupt Occurred");
+	spin_lock_irq(&my_spinlock); 
+        etx_global_variable++;
+        printk(KERN_INFO "Executing ISR Function : %lu\n", etx_global_variable);
+        spin_unlock_irq(&my_spinlock);
+        /*Scheduling Task to Tasklet*/
+        tasklet_schedule(&tasklet); 
+        
+        return IRQ_HANDLED;
+}
+
+
+
+
+/*Tasklet Function*/
+void tasklet_fn(unsigned long arg)
+{
+	spin_lock_irq(&my_spinlock);
+	etx_global_variable++;
+        printk(KERN_INFO "Executing Tasklet Function : %lu\n", etx_global_variable);
+        spin_unlock_irq(&my_spinlock);
+}
+
+
+//File operation structure  
 static struct file_operations fops =
 {
         .owner          = THIS_MODULE,
@@ -73,10 +81,10 @@ static struct file_operations fops =
         .open           = etx_open,
         .release        = etx_release,
 };
- 
+
 /*
 ** This function will be called when we open the Device file
-*/  
+*/ 
 static int etx_open(struct inode *inode, struct file *file)
 {
         pr_info("Device File Opened...!!!\n");
@@ -85,7 +93,7 @@ static int etx_open(struct inode *inode, struct file *file)
 
 /*
 ** This function will be called when we close the Device file
-*/   
+*/ 
 static int etx_release(struct inode *inode, struct file *file)
 {
         pr_info("Device File Closed...!!!\n");
@@ -94,23 +102,20 @@ static int etx_release(struct inode *inode, struct file *file)
 
 /*
 ** This function will be called when we read the Device file
-*/ 
+*/
 static ssize_t etx_read(struct file *filp, 
                 char __user *buf, size_t len, loff_t *off)
 {
 	struct irq_desc *desc;
         pr_info("Read function\n");
-
-	/* Triggering Interrupt */
 	desc = irq_to_desc(11);
         if (!desc) 
         {
             return -EINVAL;
         }
         __this_cpu_write(vector_irq[59], desc);
-        asm("int $0x3B");  // Corresponding to irq 11
-
-	return 0;
+	asm("int $0x3B");  // Corresponding to irq 11
+        return 0;
 }
 
 /*
@@ -125,7 +130,7 @@ static ssize_t etx_write(struct file *filp,
 
 /*
 ** Module Init function
-*/ 
+*/
 static int __init etx_driver_init(void)
 {
         /*Allocating Major number*/
@@ -152,54 +157,43 @@ static int __init etx_driver_init(void)
  
         /*Creating device*/
         if(IS_ERR(device_create(dev_class,NULL,dev,NULL,"etx_device"))){
-            pr_info("Cannot create the Device 1\n");
+            pr_info("Cannot create the Device \n");
             goto r_device;
         }
-
-	if (request_irq(IRQ_NO, irq_handler, IRQF_SHARED, "etx_device", (void *)(irq_handler))) {
-            pr_info("my_device: cannot register IRQ ");
+ 
+	spin_lock_init(&my_spinlock);
+ 
+        if (request_irq(IRQ_NO, irq_handler, IRQF_SHARED, "etx_device", (void *)(irq_handler))) {
+            printk(KERN_INFO "my_device: cannot register IRQ ");
                     goto irq;
         }
-
-	/* Init the tasklet bt Dynamic Method */
-	tasklet1 = kmalloc(sizeof(struct tasklet_struct), GFP_KERNEL);
-	tasklet2 = kmalloc(sizeof(struct tasklet_struct), GFP_KERNEL);
-
-	tasklet_init(tasklet1, tasklet1_fn, 1);
-	tasklet_init(tasklet2, tasklet2_fn, 2);
- 
+        
         pr_info("Device Driver Insert...Done!!!\n");
         return 0;
  
-irq:
+ irq:
         free_irq(IRQ_NO,(void *)(irq_handler));
  
 r_device:
         class_destroy(dev_class);
 r_class:
         unregister_chrdev_region(dev,1);
-        cdev_del(&etx_cdev);   
+        cdev_del(&etx_cdev);
         return -1;
 }
 
 /*
 ** Module exit function
-*/  
+*/
 static void __exit etx_driver_exit(void)
 {
-        /*Kill the Tasklet */
-	tasklet_kill(tasklet1);
-	tasklet_kill(tasklet2);
-
-	kfree(tasklet1);
-	kfree(tasklet2);
-	
+	tasklet_kill(&tasklet);
 	free_irq(IRQ_NO,(void *)(irq_handler));
-	device_destroy(dev_class,dev);
+        device_destroy(dev_class,dev);
         class_destroy(dev_class);
         cdev_del(&etx_cdev);
         unregister_chrdev_region(dev, 1);
-        pr_info("Device Driver Remove...Done!!!\n");
+        pr_info("Device Driver Remove...Done!!\n");
 }
  
 module_init(etx_driver_init);
