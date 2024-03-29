@@ -25,15 +25,15 @@ void workqueue_fn(struct work_struct *work);
 /*Workqueue Function*/
 void workqueue_fn(struct work_struct *work)
 {
-	pr_info("Executing workqueue functoin");
+	pr_info("Executing workqueue function");
 }
  
 //Interrupt handler for IRQ 11. 
 static irqreturn_t irq_handler(int irq, void *dev_id)
 {
 	pr_info("Shared IRQ: Interrupt Occurred");
-	schedule_work(&workqueue);
-
+	schedule_work_on(3,&workqueue);
+	pr_info("Interrupt handler on %d CPU",get_cpu());
 	return IRQ_HANDLED;
 }
 

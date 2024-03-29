@@ -1,4 +1,4 @@
-obj-m += multdev_pcd.o
+obj-m += misc_driver.o
 
 KDIR = /lib/modules/$(shell uname -r)/build
 all:
