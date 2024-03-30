@@ -27,7 +27,7 @@ static void __exit etx_driver_exit(void);
  
 static struct task_struct *etx_thread1;
 static struct task_struct *etx_thread2;
-//static struct task_struct *etx_thread3; 
+static struct task_struct *etx_thread3; 
  
 /*************** Driver functions **********************/
 static int etx_open(struct inode *inode, struct file *file);
@@ -45,31 +45,38 @@ int thread_function3(void *pv);
 //Thread used for writing
 int thread_function1(void *pv)
 {
-	//while(!kthread_should_stop())
-	//{
+	while(!kthread_should_stop())
+	{
 	    write_seqlock(&etx_seq_lock);
 	    etx_global_variable++;
 	    pr_info("Written\n");
 	    write_sequnlock(&etx_seq_lock);
-	    //msleep(1000);
-	    //}
+	    msleep(1000);
+	}
     return 0;
 }
 
 //Thread used for reading
 int thread_function2(void *pv)
 {
+	int i = 0;
     unsigned int seq_no;
     unsigned long read_value;
     while(!kthread_should_stop())
     {
 	    do
 	    {
+		    i++;
 		    seq_no = read_seqbegin(&etx_seq_lock);
 		    read_value = etx_global_variable;
+		    if(i > 1)
+		    {
+			    pr_info("Thread Function2 reading again\n");
+		    }
 	    }while(read_seqretry(&etx_seq_lock, seq_no));
 
 	    pr_info("In EmbeTronicX Thread Function2 : Read value %lu\n", read_value);
+	    i=0;
 	    msleep(1000);
     }
     return 0;
@@ -78,17 +85,24 @@ int thread_function2(void *pv)
 //Thread used for reading
 int thread_function3(void *pv)
 {
+	int i = 0;
     unsigned int seq_no;
     unsigned long read_value;
     while(!kthread_should_stop())
     {
 	    do
 	    {
+		    i++;
 		    seq_no = read_seqbegin(&etx_seq_lock);
 		    read_value = etx_global_variable;
+		    if(i > 1)
+		    {
+			    pr_info("Thread Function3 reading again\n");
+		    }
 	    }while(read_seqretry(&etx_seq_lock, seq_no));
 
 	    pr_info("In EmbeTronicX Thread Function3 : Read value %lu\n", read_value);
+	    i=0;
 	    msleep(1000);
     }
     return 0;
@@ -176,7 +190,9 @@ static int __init etx_driver_init(void)
             pr_info("Cannot create the Device \n");
             goto r_device;
         }
- 
+
+	//Initialize the seqlock
+	seqlock_init(&etx_seq_lock);
         
         /* Creating Thread 1 */
         etx_thread1 = kthread_run(thread_function1,NULL,"eTx Thread1");
@@ -196,17 +212,16 @@ static int __init etx_driver_init(void)
              goto r_device;
         }
 
-	/* Creating Thread 3
-        etx_thread2 = kthread_run(thread_function3,NULL,"eTx Thread3");
+	/* Creating Thread 3*/
+        etx_thread3 = kthread_run(thread_function3,NULL,"eTx Thread3");
         if(etx_thread3) {
             pr_err("Kthread3 Created Successfully...\n");
         } else {
             pr_err("Cannot create kthread3\n");
              goto r_device;
         }
-	*///not working if third thread is included
-        //Initialize the seqlock
-	seqlock_init(&etx_seq_lock);
+	//not working if third thread is included
+        
 
 	pr_info("Device Driver Insert...Done!!!\n");
         return 0;
@@ -227,7 +242,7 @@ static void __exit etx_driver_exit(void)
 {
         kthread_stop(etx_thread1);
         kthread_stop(etx_thread2);
-	//kthread_stop(etx_thread3);
+	kthread_stop(etx_thread3);
         device_destroy(dev_class,dev);
         class_destroy(dev_class);
         cdev_del(&etx_cdev);
