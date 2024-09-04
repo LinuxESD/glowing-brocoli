@@ -1,0 +1,20 @@
+    # EightmanServices app domain
+    type eightmanservices, domain;
+    app_domain(eightmanservices)
+    #gpu_access(eightmanservices)
+
+    allow eightmanservices gpu_device:chr_file rw_file_perms;
+     
+    # Use system services exposed as part of Android framework public API
+    allow eightmanservices app_api_service:service_manager find;
+     
+    # Read and write /data/data subdirectory (for its app-private persistent data)
+    allow eightmanservices app_data_file:dir create_dir_perms;
+    allow eightmanservices app_data_file:{ file lnk_file } create_file_perms;
+     
+    # Find the CPU service interface in the Service Manager
+    #allow eightmanservices cpu_service:service_manager find;
+     
+    # Send direct binder calls to the CPU HAL service
+    #allow eightmanservices hal_cpu_default:binder call;
+    

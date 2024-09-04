@@ -1,0 +1,2 @@
+# Eightman files
+/vendor/bin/hw/vendor\.eightman\.cpu-service u:object_r:hal_cpu_default_exec:s0

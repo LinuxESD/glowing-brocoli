@@ -1,0 +1,5 @@
+#binder_call(hal_cpu_client, hal_cpu_server);
+
+#hal_attribute_service(hal_cpu, hal_cpu_service);
+
+#binder_use(hal_cpu_server);
