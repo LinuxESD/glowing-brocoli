@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+     
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/middleGuideLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_percent="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+     
+        <TextView
+            android:id="@+id/setScalingGovernorTV"
+            style="@style/width0dp.darkText.center"
+            android:layout_marginTop="20dp"
+            android:text="@string/set_scaling_governor"
+            android:textSize="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+     
+        <TextView
+            android:id="@+id/scalingGovernorTV"
+            style="@style/width0dp.darkText.center"
+            android:text="/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/setScalingGovernorTV" />
+     
+        <Button
+            android:id="@+id/performanceButton"
+            style="@style/width0dp"
+            android:layout_marginTop="20dp"
+            android:onClick="onClick"
+            android:text="performance"
+            app:layout_constraintEnd_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scalingGovernorTV" />
+     
+        <Button
+            android:id="@+id/powersaveButton"
+            style="@style/width0dp"
+            android:onClick="onClick"
+            android:text="powersave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintTop_toTopOf="@id/performanceButton" />
+     
+        <Button
+            android:id="@+id/schedutilButton"
+            style="@style/width0dp"
+            android:onClick="onClick"
+            android:text="schedutil"
+            app:layout_constraintEnd_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/performanceButton" />
+     
+        <Button
+            android:id="@+id/conservativeButton"
+            style="@style/width0dp"
+            android:onClick="onClick"
+            android:text="conservative"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintTop_toBottomOf="@id/performanceButton" />
+     
+        <Button
+            android:id="@+id/errorButton"
+            style="@style/width0dp"
+            android:onClick="onClick"
+            android:text="@string/send_error"
+            app:layout_constraintEnd_toEndOf="@+id/middleGuideLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/conservativeButton" />
+     
+        <Button
+            android:id="@+id/fetchButton"
+            style="@style/width0dp"
+            android:onClick="onFetchValue"
+            android:text="@string/fetch_value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintTop_toBottomOf="@id/schedutilButton" />
+     
+        <View
+            android:id="@+id/buttonDiv0"
+            style="@style/hdiv"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fetchButton" />
+     
+        <View
+            android:id="@+id/buttonDiv1"
+            style="@style/hdiv.marginTop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonDiv0" />
+     
+        <View
+            android:id="@+id/buttonDivH0"
+            style="@style/vdiv"
+            app:layout_constraintBottom_toBottomOf="@id/buttonDiv1"
+            app:layout_constraintEnd_toEndOf="@id/middleGuideLine"
+            app:layout_constraintStart_toStartOf="@id/middleGuideLine"
+            app:layout_constraintTop_toTopOf="@id/buttonDiv0" />
+     
+        <TextView
+            android:id="@+id/valueLabelTV"
+            style="@style/width0dp.darkText.margin"
+            android:text="@string/value"
+            app:layout_constraintBottom_toBottomOf="@id/buttonDiv1"
+            app:layout_constraintEnd_toEndOf="@+id/middleGuideLine"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonDiv0" />
+     
+        <TextView
+            android:id="@+id/valueTV"
+            style="@style/width0dp.statusText"
+            app:layout_constraintBottom_toBottomOf="@id/valueLabelTV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/middleGuideLine"
+            app:layout_constraintTop_toTopOf="@id/valueLabelTV" />
+     
+    </androidx.constraintlayout.widget.ConstraintLayout>

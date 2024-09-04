@@ -1,0 +1,7 @@
+    <resources>
+        <string name="app_name">Eightman</string>
+        <string name="set_scaling_governor">Set Scaling Governor</string>
+        <string name="send_error">Send Error</string>
+        <string name="fetch_value">Fetch Value</string>
+        <string name="value">Value</string>
+    </resources>

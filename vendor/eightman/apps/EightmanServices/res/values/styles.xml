@@ -1,0 +1,39 @@
+    <resources>
+        <style name="width0dp">
+            <item name="android:layout_width">0dp</item>
+            <item name="android:layout_height">wrap_content</item>
+        </style>
+     
+        <style name="width0dp.darkText">
+            <item name="android:textColor">@color/darkGray</item>
+        </style>
+     
+        <style name="width0dp.darkText.center">
+            <item name="android:gravity">center</item>
+        </style>
+     
+        <style name="width0dp.statusText">
+            <item name="android:gravity">center</item>
+            <item name="android:textSize">18sp</item>
+        </style>
+     
+        <style name="width0dp.darkText.margin">
+            <item name="android:layout_margin">16dp</item>
+        </style>
+     
+        <style name="hdiv">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">2px</item>
+            <item name="android:background">@color/darkGray</item>
+        </style>
+     
+        <style name="hdiv.marginTop">
+            <item name="android:layout_marginTop">60dp</item>
+        </style>
+     
+        <style name="vdiv">
+            <item name="android:layout_width">1px</item>
+            <item name="android:layout_height">0px</item>
+            <item name="android:background">@color/darkGray</item>
+        </style>
+    </resources>

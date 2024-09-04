@@ -1,0 +1,27 @@
+    cc_binary {
+        name: "vendor.eightman.cpu-service",
+        vendor: true,
+        relative_install_path: "hw",
+        init_rc: ["vendor.eightman.cpu-service.rc"],
+        vintf_fragments: ["vendor.eightman.cpu-service.xml"],
+     
+        srcs: [
+            "service.cpp",
+	    "Cpu.cpp",
+        ],
+     
+        cflags: [
+            "-Wall",
+            "-Werror",
+        ],
+     
+        shared_libs: [
+            "libbase",
+            "liblog",
+            "libhardware",
+            "libbinder_ndk",
+            "libbinder",
+            "libutils",
+            "vendor.eightman.cpu-V1-ndk",
+        ],
+    }

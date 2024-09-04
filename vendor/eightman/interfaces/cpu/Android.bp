@@ -1,0 +1,15 @@
+    aidl_interface {
+        name: "vendor.eightman.cpu",
+        vendor: true,
+        srcs: ["vendor/eightman/cpu/*.aidl"],
+        stability: "vintf",
+        owner: "8MAN_TECH",
+        backend: {
+            cpp: {
+                enabled: true,
+            },
+            java: {
+                sdk_version: "module_current",
+            },
+        },
+    }

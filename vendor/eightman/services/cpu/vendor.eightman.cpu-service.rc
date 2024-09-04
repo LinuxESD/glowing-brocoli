@@ -1,0 +1,8 @@
+    service vendor.eightman.cpu-service /vendor/bin/hw/vendor.eightman.cpu-service
+            interface aidl vendor.eightman.cpu.ICpu/default
+            class hal
+            user system
+            group system
+
+    on boot
+            chown system root /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
